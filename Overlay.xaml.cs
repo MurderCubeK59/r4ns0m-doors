@@ -71,7 +71,7 @@ namespace r4ns0m
         }
 
         /// <summary>
-        /// Removes every trace RANS0M leaves on the system: gold coin files, the drawer temp folder,
+        /// Removes every trace R4NS0M leaves on the system: gold coin files, the drawer temp folder,
         /// the file types registrations and their icons, and the desktop wallpaper.
         /// </summary>
         private void FullCleanup()
@@ -112,7 +112,7 @@ namespace r4ns0m
             {
                 Icon = System.Drawing.Icon.ExtractAssociatedIcon(Environment.ProcessPath) ?? System.Drawing.SystemIcons.Application,
                 ContextMenuStrip = trayMenu,
-                Text = "RANS0M",
+                Text = "R4NS0M",
                 Visible = true
             };
         }
@@ -162,7 +162,19 @@ namespace r4ns0m
         /// </summary>
         public async Task ResetRansom()
         {
-            await Task.Run(() => GoldCoinManager.DeleteAllCoins());
+            try
+            {
+                await Task.Run(() => GoldCoinManager.DeleteAllCoins());
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(
+                    $"GoldCoinManager.DeleteAllCoins() failed:\n\n{ex}",
+                    "Gold Cleanup Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+            }
 
             Global.canAttack = true;
             Global.RansomPayed = null;
@@ -259,7 +271,15 @@ namespace r4ns0m
             {
                 int generatedGold = 0;
                 try { generatedGold = await Task.Run(() => GoldCoinManager.GenerateCoins()); }
-                catch { }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show(
+                        $"GoldCoinManager.GenerateCoins() failed:\n\n{ex}",
+                        "Gold Generation Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                }
 
                 try
                 {

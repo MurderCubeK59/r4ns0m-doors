@@ -8,20 +8,30 @@
     <UseWPF>true</UseWPF>
 
     <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
-    <Version>2.0.0.0</Version>
+
+    <!-- EXE name -->
+    <AssemblyName>r4ns0m</AssemblyName>
+    <RootNamespace>r4ns0m</RootNamespace>
+
+    <!-- Windows Explorer file metadata -->
+    <Product>r4ns0m</Product>
+    <Title>r4ns0m</Title>
+    <Description>A recreation of Ransom entity from Roblox DOORS</Description>
+    <FileDescription>A recreation of Ransom entity from Roblox DOORS</FileDescription>
+
+    <Version>2.1.0.0</Version>
+    <AssemblyVersion>2.1.0.0</AssemblyVersion>
+    <FileVersion>2.1.0.0</FileVersion>
+
     <Company>MurderCube_K59</Company>
     <Copyright>MurderCube_K59</Copyright>
-    <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
 
-    <!-- Single-file Windows executable settings -->
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
     <SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
-
-    <!-- Extract native DLLs at startup when required by WPF or packages -->
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-
-    <!-- Extract bundled files to a temporary folder if required -->
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
   </PropertyGroup>
 
