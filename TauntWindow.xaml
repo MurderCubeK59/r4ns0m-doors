@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:r4ns0m"
         mc:Ignorable="d"
-        Title="TauntWindow" Height="450" Width="800" Background="#FF320000" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True" Loaded="Window_Loaded">
+        Title="RANSOM" Height="450" Width="800" Background="#FF320000" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True" Loaded="Window_Loaded">
     <Grid>
         
     </Grid>

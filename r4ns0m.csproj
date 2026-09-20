@@ -7,24 +7,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
 
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
     <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
 
     <!-- EXE name -->
     <AssemblyName>r4ns0m</AssemblyName>
     <RootNamespace>r4ns0m</RootNamespace>
-
-    <!-- Windows Explorer file metadata -->
-    <Product>r4ns0m</Product>
-    <Title>r4ns0m</Title>
-    <Description>A recreation of Ransom entity from Roblox DOORS</Description>
-    <FileDescription>A recreation of Ransom entity from Roblox DOORS</FileDescription>
-
-    <Version>2.1.0.0</Version>
-    <AssemblyVersion>2.1.0.0</AssemblyVersion>
-    <FileVersion>2.1.0.0</FileVersion>
-
-    <Company>MurderCube_K59</Company>
-    <Copyright>MurderCube_K59</Copyright>
 
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
 

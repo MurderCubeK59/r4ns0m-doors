@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using WpfApplication = System.Windows.Application;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace r4ns0m
 {
@@ -13,22 +15,31 @@ namespace r4ns0m
         public static Overlay? overlayWindow;
         // Titles used by the pop up windows
         public static readonly List<string> tauntTitles = new() {
+            " ",
             "RANS0M",
             "MOSNAR",
             "RANSOM",
             "M0NARS",
+            "RANASOM",
+            "RNAOSM",
+            "RANS0MRANS0M",
             "YOU ARE AN IDIOT",
             "Untitled",
             "Untitled (3)",
             "I FOUND YOU",
             "RANSOM.exe",
-            "RAANNNSSSSOOOOOMMMMMM",
+            "RRAANNSSOOMM",
             "times up",
             "GIVE MONEY",
             "ERROR",
             "DHAUFGH",
-            "_________",
-            "IMG.JPG"
+            "_____",
+            "IMG.JPG",
+            "ENCRYPTION",
+            "KEY",
+            "AJWBXV",
+            "YOUR GOLD IS VERY YUMMY!",
+            "YOURGOLDAREBELONGTOUS"
         };
 
         // Images used by the pop up windows
@@ -211,6 +222,65 @@ namespace r4ns0m
                 }
             }
         }
+
+        public static async Task ShortTauntIdle(CancellationToken cancellationToken)
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                ShortTauntWindow? shortTauntWindow = null;
+
+                try
+                {
+                    await WpfApplication.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                            return;
+
+                        shortTauntWindow = new ShortTauntWindow();
+
+                        double width = Global.rng.Next(20, 300);
+                        double height = Global.rng.Next(30, 350);
+
+                        shortTauntWindow.Width = width;
+                        shortTauntWindow.Height = height;
+                        shortTauntWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+
+                        int maxX = Math.Max(0, (int)(Global.screenBounds.Width - width));
+
+                        int maxY = Math.Max(0, (int)(Global.screenBounds.Height - height));
+
+                        shortTauntWindow.Left = Global.rng.Next(0, maxX + 1);
+                        shortTauntWindow.Top = Global.rng.Next(0, maxY + 1);
+
+                        shortTauntWindow.Show();
+                    });
+
+                    // Keep the short window visible briefly
+                    // Global.rng.Next(400, 1200) for randomized numbers
+                    await Task.Delay(10, cancellationToken);
+
+                    await WpfApplication.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        if (shortTauntWindow != null && shortTauntWindow.IsVisible)
+                        {
+                            shortTauntWindow.Close();
+                        }
+                    });
+
+                    // Pause before the next short window
+                    await Task.Delay(Global.rng.Next(150, 700), cancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    // Normal exit when TauntWindow closes
+                    break;
+                }
+                catch
+                {
+                    break;
+                }
+            }
+        }   
 
         [DllImport("user32.dll")]
         private static extern int GetWindowLong(IntPtr hwnd, int index);
