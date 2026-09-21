@@ -9,7 +9,6 @@ namespace r4ns0m
     public partial class TauntWindow : Window
     {
         private readonly CancellationTokenSource _closeCts = new();
-        private readonly CancellationTokenSource _shortTauntCts = new();
         private bool _closed;
 
         public TauntWindow()
@@ -42,8 +41,6 @@ namespace r4ns0m
 
             // This must not contain a busy while-loop.
             new Thread(async () => Global.GlitchIdle(this)) { IsBackground = true }.Start();
-
-            _ = Global.ShortTauntIdle(_shortTauntCts.Token);
             _ = PlaySpawnSoundAsync();
             _ = CloseAfterDelayAsync();
         }
@@ -91,7 +88,6 @@ namespace r4ns0m
             EventArgs e)
         {
             _closed = true;
-            _shortTauntCts.Cancel();
 
             if (!_closeCts.IsCancellationRequested)
                 _closeCts.Cancel();

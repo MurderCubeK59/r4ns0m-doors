@@ -162,6 +162,8 @@ namespace r4ns0m
         /// </summary>
         public async Task ResetRansom()
         {
+            Global.CloseAllTauntWindows();
+            Global.StopShortTaunts();
             try
             {
                 await Task.Run(() => GoldCoinManager.DeleteAllCoins());
@@ -269,6 +271,8 @@ namespace r4ns0m
             bool mouseMoved = await RansomWarning();
             if (mouseMoved) // User moved the mouse
             {
+                // The user moved the mouse or pressed a key.
+                
                 int generatedGold = 0;
                 try { generatedGold = await Task.Run(() => GoldCoinManager.GenerateCoins()); }
                 catch (Exception ex)
@@ -458,6 +462,8 @@ namespace r4ns0m
             vb_download.Opacity = 0;
             foreach (Border seg in dpbSegments) seg.Background = new SolidColorBrush(Color.FromRgb(0, 0, 0));
             staticBg.Opacity = 0;
+            Global.StartShortTaunts();
+            Global.OpenAllTauntWindows();
         }
 
         /// <summary>
@@ -483,6 +489,7 @@ namespace r4ns0m
             brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
 
             redVignette.Opacity = 100;
+            
 
             // OST
             SoundHandle layer1 = SoundHelper.Create(Global.GetResourceSteam("Sounds/layer1.wav"));
@@ -497,6 +504,7 @@ namespace r4ns0m
             TaskCompletionSource<bool> paidSignal = new TaskCompletionSource<bool>();
             Global.RansomPayed = () => // Ransom payed event
             {
+                Global.StopShortTaunts();
                 layer1.Stop();
                 layer2.Stop();
                 layer3.Stop();
@@ -550,6 +558,7 @@ namespace r4ns0m
             }
 
             // If the code reaches here, this means the user didn't pay the ransom in time 
+            Global.StopShortTaunts();
             if (ransomNotification != null)
             {
                 ransomNotification.Close();

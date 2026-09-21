@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interop;
@@ -12,6 +14,7 @@ namespace r4ns0m
 {
     public class Global
     {
+        public static List<TauntWindow> OpenTauntWindows = new();
         public static Overlay? overlayWindow;
         // Titles used by the pop up windows
         public static readonly List<string> tauntTitles = new() {
@@ -223,6 +226,74 @@ namespace r4ns0m
             }
         }
 
+        public static void OpenAllTauntWindows()
+        {
+            WpfApplication.Current.Dispatcher.Invoke(() =>
+            {
+                CloseAllTauntWindows();
+
+                int numberOfWindows = 5;
+
+                for (int i = 0; i < numberOfWindows; i++)
+                {
+                    TauntWindow window = new TauntWindow
+                    {
+                        WindowStartupLocation = WindowStartupLocation.Manual
+                    };
+
+                    window.Show();
+
+                    double windowWidth = window.ActualWidth;
+                    double windowHeight = window.ActualHeight;
+
+                    int maxX = Math.Max(
+                        0,
+                        (int)(screenBounds.Width - windowWidth));
+
+                    int maxY = Math.Max(
+                        0,
+                        (int)(screenBounds.Height - windowHeight));
+
+                    window.Left = rng.Next(0, maxX + 1);
+                    window.Top = rng.Next(0, maxY + 1);
+
+                    OpenTauntWindows.Add(window);
+                }
+            });
+        }
+        public static void CloseAllTauntWindows()
+        {
+            foreach (TauntWindow window in OpenTauntWindows.ToList())
+            {
+                if (window.IsVisible)
+                    window.Close();
+            }
+
+            OpenTauntWindows.Clear();
+        }
+
+
+
+        public static void StartShortTaunts()
+        {
+            StopShortTaunts();
+
+            _shortTauntCts = new CancellationTokenSource();
+
+            _ = ShortTauntIdle(_shortTauntCts.Token);
+        }
+
+        public static void StopShortTaunts()
+        {
+            if (_shortTauntCts == null)
+                return;
+
+            _shortTauntCts.Cancel();
+            _shortTauntCts.Dispose();
+            _shortTauntCts = null;
+        }
+
+        private static CancellationTokenSource? _shortTauntCts;
         public static async Task ShortTauntIdle(CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
@@ -257,7 +328,7 @@ namespace r4ns0m
 
                     // Keep the short window visible briefly
                     // Global.rng.Next(400, 1200) for randomized numbers
-                    await Task.Delay(10, cancellationToken);
+                    await Task.Delay(70, cancellationToken);
 
                     await WpfApplication.Current.Dispatcher.InvokeAsync(() =>
                     {

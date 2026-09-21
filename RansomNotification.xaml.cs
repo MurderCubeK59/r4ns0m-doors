@@ -31,11 +31,11 @@ namespace r4ns0m
             Global.RandomPosWindow(this);
 
             // Init 9 taunt windows
-            for (int i = 0; i < 9; i++)
-            {
-                TauntWindow tauntWindow = new TauntWindow();
-                tauntWindow.Show();
-            }
+            //for (int i = 0; i < 9; i++)
+            //{
+            //    TauntWindow tauntWindow = new TauntWindow();
+            //    tauntWindow.Show();
+            //}
 
             Global.GlitchIdle(this, true);
         }

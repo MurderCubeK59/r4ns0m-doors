@@ -1,4 +1,5 @@
 using NAudio.Wave;
+using System;
 using System.IO;
 
 namespace r4ns0m
@@ -7,25 +8,41 @@ namespace r4ns0m
     {
         private readonly WaveOut _waveOut;
         private readonly WaveFileReader _reader;
+        private readonly Stream _stream;
+
         private bool _disposed;
         private bool _looping;
 
-        public SoundHandle(WaveOut waveOut, WaveFileReader reader)
+        public SoundHandle(
+            WaveOut waveOut,
+            WaveFileReader reader,
+            Stream stream)
         {
             _waveOut = waveOut;
             _reader = reader;
+            _stream = stream;
+
             _waveOut.PlaybackStopped += OnPlaybackStopped;
         }
 
-        public void Play() => _waveOut.Play();
+        public void Play()
+        {
+            if (_disposed)
+                return;
+
+            _waveOut.Play();
+        }
 
         public void PlayLooping()
         {
+            if (_disposed)
+                return;
+
             _looping = true;
             _waveOut.Play();
         }
 
-        private void OnPlaybackStopped(object s, StoppedEventArgs e)
+        private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
         {
             if (_looping && !_disposed)
             {
@@ -33,33 +50,43 @@ namespace r4ns0m
                 _waveOut.Play();
                 return;
             }
+
             DisposeOnce();
         }
 
         public void Stop()
         {
+            if (_disposed)
+                return;
+
             _looping = false;
-            try { _waveOut.Stop(); } catch { }
+
+            try
+            {
+                _waveOut.Stop();
+            }
+            catch
+            {
+            }
+
             DisposeOnce();
         }
 
         private void DisposeOnce()
         {
-            if (_disposed) return;
+            if (_disposed)
+                return;
+
             _disposed = true;
+
             _waveOut.Dispose();
             _reader.Dispose();
+            _stream.Dispose();
         }
     }
 
-    // Should use SoundHandle now instead and delete this
     public class SoundHelper
     {
-        /// <summary>
-        /// Creates a playable sound handle from an audio stream.
-        /// </summary>
-        /// <param name="wavStream">Audio Stream</param>
-        /// <returns>Returns a new SoundHandle initialized with the audio data from the stream</returns>
         public static SoundHandle Create(Stream wavStream)
         {
             WaveFileReader reader = new WaveFileReader(wavStream);
@@ -67,8 +94,10 @@ namespace r4ns0m
 
             waveOut.Init(reader);
 
-            return new SoundHandle(waveOut, reader);
+            return new SoundHandle(
+                waveOut,
+                reader,
+                wavStream);
         }
-
     }
 }
